@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('despeses-fixes')
-export class DespesaFixa {
+@Entity('ingressos')
+export class Ingres {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -9,13 +9,10 @@ export class DespesaFixa {
     import: number;
 
     @Column()
-    descripcio: string;
+    concepte: string;
 
     @Column()
-    mesInici?: number;
-
-    @Column()
-    mesFi?: number;
+    data: Date;
 
     @Column()
     dataInsercio: Date;

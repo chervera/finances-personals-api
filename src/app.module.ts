@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { DespesesFixesModule } from './despeses-fixes/despeses-fixes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { IngressosModule } from './ingressos/ingressos.module';
 
 
 @Module({
@@ -16,7 +17,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    DespesesFixesModule
+    DespesesFixesModule,
+    IngressosModule
   ],
   providers: [AppService],
 })

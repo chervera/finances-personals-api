@@ -18,6 +18,8 @@ export class DespesesFixesAssemblerService {
         dto.mesInici = entity.mesInici;
         dto.mesFi = entity.mesFi;
         dto.id = dto.id;
+        // Una manera JS 2018 de fer el mateix.
+        //const {dataInsercio, ...dto} = entity;
         return dto;
     }
 }

@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, Query } from '@nestjs/common';
 import { DespesesFixesService } from '../services/despeses-fixes.service';
 import { DespesaFixa } from '../domain/despesa-fixa.entity';
 import { DespesaFixaDTO } from '../dto/despesa-fixa.dto';
 import { DespesesFixesAssemblerService } from '../assemblers/despeses-fixes-assembler.service';
+import { ApiQuery } from '@nestjs/swagger';
 
-@Controller('/v1/despeses-fixes')
+@Controller('/api/v1/despeses-fixes')
 export class DespesesFixesController {
 
     constructor(
@@ -12,8 +13,10 @@ export class DespesesFixesController {
     ) { }
 
     @Get()
-    findAll(): Promise<DespesaFixa[]> {
-        return this.service.findAll();
+    @ApiQuery({ name: 'year', required: false })
+    @ApiQuery({ name: 'month', required: false })
+    findAll(@Query('year') year: number, @Query('month') month: number): Promise<DespesaFixa[]> {
+        return this.service.findAll(year, month);
     }
 
     @Get(':id')

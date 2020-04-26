@@ -11,8 +11,9 @@ export class DespesesFixesService {
         private repository: Repository<DespesaFixa>,
     ) { }
 
-    findAll(): Promise<DespesaFixa[]> {
-        return this.repository.find();
+    findAll(year, month): Promise<DespesaFixa[]> {
+        //TODO: s'ha de filtrar els resultats per mes o any
+        return this.repository.find({ where: { year, month } });
     }
 
     findOne(id: string): Promise<DespesaFixa> {
