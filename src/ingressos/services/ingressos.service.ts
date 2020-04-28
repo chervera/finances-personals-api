@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Ingres } from '../domain/Ingres.entity';
+import { Ingres } from '../domain/ingres.entity';
 
 @Injectable()
 export class IngressosService {

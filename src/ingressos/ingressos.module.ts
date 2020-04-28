@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Ingres } from './domain/Ingres.entity';
+import { Ingres } from './domain/ingres.entity';
 import { IngressosController } from './controllers/ingressos.controller';
 import { IngressosService } from './services/ingressos.service';
 import { IngresAssemblerService } from './assemblers/ingres-assembler.service';

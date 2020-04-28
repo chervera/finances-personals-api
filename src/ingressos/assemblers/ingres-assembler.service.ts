@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Ingres } from '../domain/Ingres.entity';
+import { Ingres } from '../domain/ingres.entity';
 import { IngresDTO } from '../dto/ingres.dto';
 
 @Injectable()

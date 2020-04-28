@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Alimentacio } from '../domain/Alimentacio.entity';
+import { Alimentacio } from '../domain/alimentacio.entity';
 import { AlimentacioDTO } from '../dto/alimentacio.dto';
 
 

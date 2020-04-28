@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put } from '@nestjs/common';
-import { Ingres } from '../domain/Ingres.entity';
+import { Ingres } from '../domain/ingres.entity';
 import { IngressosService } from '../services/ingressos.service';
 import { IngresDTO } from '../dto/ingres.dto';
 import { IngresAssemblerService } from '../assemblers/ingres-assembler.service';

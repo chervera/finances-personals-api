@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put } from '@nestjs/common';
-import { Alimentacio } from '../domain/Alimentacio.entity';
+import { Alimentacio } from '../domain/alimentacio.entity';
 import { AlimentacioAssemblerService } from '../assemblers/alimentacio-assembler.service';
 import { AlimentacionsService } from '../services/alimentacions.service';
 import { AlimentacioDTO } from '../dto/alimentacio.dto';
