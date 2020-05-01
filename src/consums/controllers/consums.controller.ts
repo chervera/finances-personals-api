@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, UseGuards } from '@nestjs/common';
 import { Consum } from '../domain/consum.entity';
 import { ConsumAssemblerService } from '../assemblers/consum-assembler.service';
 import { ConsumsService } from '../services/consums.service';
 import { ConsumDTO } from '../dto/consum.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('/api/v1/consums')
 export class ConsumController {
 

@@ -6,6 +6,8 @@ import { IngressosModule } from './ingressos/ingressos.module';
 import { AlimentacioModule } from './alimentacio/alimentacio.module';
 import { ConsumsModule } from './consums/consums.module';
 import { MastersModule } from './masters/masters.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -24,7 +26,9 @@ import { MastersModule } from './masters/masters.module';
     IngressosModule,
     AlimentacioModule,
     ConsumsModule,
-    MastersModule
+    MastersModule,
+    AuthModule,
+    UsersModule
   ],
   providers: [AppService],
 })

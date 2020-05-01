@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, Query, UseGuards } from '@nestjs/common';
 import { DespesesFixesService } from '../services/despeses-fixes.service';
 import { DespesaFixa } from '../domain/despesa-fixa.entity';
 import { DespesaFixaDTO } from '../dto/despesa-fixa.dto';
 import { DespesesFixesAssemblerService } from '../assemblers/despeses-fixes-assembler.service';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('/api/v1/despeses-fixes')
 export class DespesesFixesController {
 
