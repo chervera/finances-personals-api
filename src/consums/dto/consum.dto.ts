@@ -10,7 +10,6 @@ export class ConsumDTO {
     import: number;
 
     @ApiProperty()
-    @IsNotEmpty()
     concepte: string;
 
     @ApiProperty()

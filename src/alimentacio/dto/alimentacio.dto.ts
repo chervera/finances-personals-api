@@ -10,7 +10,6 @@ export class AlimentacioDTO {
     import: number;
 
     @ApiProperty()
-    @IsNotEmpty()
     concepte: string;
 
     @ApiProperty()

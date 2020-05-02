@@ -11,12 +11,12 @@ export class AlimentacionsService {
         private repository: Repository<Alimentacio>,
     ) { }
 
-    findAll(): Promise<Alimentacio[]> {
-        return this.repository.find();
+    findAllByUserId(userId: number): Promise<Alimentacio[]> {
+        return this.repository.find({ user: { id: userId } });
     }
 
-    findOne(id: string): Promise<Alimentacio> {
-        return this.repository.findOne(id);
+    findOneByUserId(id: string, userId: number): Promise<Alimentacio> {
+        return this.repository.findOne({ where: { id, user: { id: userId } } });
     }
 
     async create(item: Alimentacio): Promise<void> {
