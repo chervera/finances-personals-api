@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from 'src/users/domain/user.entity';
 
 @Entity('consums')
 export class Consum {
@@ -19,6 +20,9 @@ export class Consum {
 
     @Column()
     tipusConsumId: number;
+
+    @ManyToOne(type => User)
+    user: User;
 
     constructor() {
         this.dataInsercio = new Date();

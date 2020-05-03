@@ -5,6 +5,8 @@ import { ConsumsService } from '../services/consums.service';
 import { ConsumDTO } from '../dto/consum.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { UserDTO } from 'src/auth/dto/user.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -16,31 +18,39 @@ export class ConsumController {
     ) { }
 
     @Get()
-    findAll(): Promise<Consum[]> {
-        return this.service.findAll();
+    findAll(@CurrentUser() user: UserDTO): Promise<Consum[]> {
+        return this.service.findAllByUserId(user.userId);
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<Consum> {
-        const consum: Consum = await this.service.findOne(id);
+    async findOne(@Param('id') id: string, @CurrentUser() user: UserDTO): Promise<ConsumDTO> {
+        const consum: Consum = await this.service.findOneByUserId(id, user.userId);
         if (!consum) {
             throw new NotFoundException();
         }
-        return consum;
+        return ConsumAssemblerService.mapEntityToDTO(consum);
     }
 
     @Post()
-    create(@Body() consum: ConsumDTO) {
-        return this.service.create(ConsumAssemblerService.mapDTOToEntity(consum));
+    create(@Body() consum: ConsumDTO, @CurrentUser() user: UserDTO) {
+        return this.service.create(ConsumAssemblerService.mapDTOToEntity(consum, user.userId));
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() consum: Partial<ConsumDTO>) {
-        return this.service.update(+id, ConsumAssemblerService.mapDTOToEntity(consum));
+    async update(@Param('id') id: string, @Body() consum: Partial<ConsumDTO>, @CurrentUser() user: UserDTO) {
+        const storedConsum: Consum = await this.service.findOneByUserId(id, user.userId);
+        if (!storedConsum) {
+            throw new NotFoundException();
+        }
+        return this.service.update(+id, ConsumAssemblerService.mapDTOToEntity(consum, user.userId, storedConsum));
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: string): Promise<void> {
+    async delete(@Param('id') id: string, @CurrentUser() user: UserDTO): Promise<void> {
+        const storedConsum: Consum = await this.service.findOneByUserId(id, user.userId);
+        if (!storedConsum) {
+            throw new NotFoundException();
+        }
         return this.service.remove(id);
     }
 }

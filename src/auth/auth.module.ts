@@ -20,7 +20,7 @@ export const jwtConstants = {
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '5m' },
+      signOptions: { expiresIn: '15m' },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
