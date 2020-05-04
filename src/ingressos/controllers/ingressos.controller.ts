@@ -5,6 +5,9 @@ import { IngresDTO } from '../dto/ingres.dto';
 import { IngresAssemblerService } from '../assemblers/ingres-assembler.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { UserDTO } from 'src/auth/dto/user.dto';
+import { DespesesFixesAssemblerService } from 'src/despeses-fixes/assemblers/despeses-fixes-assembler.service';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -16,31 +19,39 @@ export class IngressosController {
     ) { }
 
     @Get()
-    findAll(): Promise<Ingres[]> {
-        return this.service.findAll();
+    findAll(@CurrentUser() user: UserDTO): Promise<IngresDTO[]> {
+        return this.service.findAllByUserId(user.userId).then((ingressos: Ingres[]) => ingressos.map((ingres => IngresAssemblerService.mapEntityToDTO(ingres))));
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<Ingres> {
-        const ingres: Ingres = await this.service.findOne(id);
+    async findOne(@Param('id') id: string, @CurrentUser() user: UserDTO): Promise<IngresDTO> {
+        const ingres: Ingres = await this.service.findOneByUserId(id, user.userId);
         if (!ingres) {
             throw new NotFoundException();
         }
-        return ingres;
+        return IngresAssemblerService.mapEntityToDTO(ingres);
     }
 
     @Post()
-    create(@Body() ingres: IngresDTO) {
-        return this.service.create(IngresAssemblerService.mapDTOToEntity(ingres));
+    create(@Body() ingres: IngresDTO, @CurrentUser() user: UserDTO) {
+        return this.service.create(IngresAssemblerService.mapDTOToEntity(ingres, user.userId));
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() ingres: Partial<IngresDTO>) {
-        return this.service.update(+id, IngresAssemblerService.mapDTOToEntity(ingres));
+    async update(@Param('id') id: string, @Body() ingres: Partial<IngresDTO>, @CurrentUser() user: UserDTO) {
+        const storedIngres: Ingres = await this.service.findOneByUserId(id, user.userId);
+        if (!storedIngres) {
+            throw new NotFoundException();
+        }
+        return this.service.update(+id, IngresAssemblerService.mapDTOToEntity(ingres, user.userId, storedIngres));
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: string): Promise<void> {
+    async delete(@Param('id') id: string, @CurrentUser() user: UserDTO): Promise<void> {
+        const storedIngres: Ingres = await this.service.findOneByUserId(id, user.userId);
+        if (!storedIngres) {
+            throw new NotFoundException();
+        }
         return this.service.remove(id);
     }
 }

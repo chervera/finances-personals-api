@@ -14,8 +14,8 @@ export class DespesaFixaDTO {
     descripcio: string;
 
     @ApiPropertyOptional()
-    mesInici: number;
+    mesInici?: number;
 
     @ApiPropertyOptional()
-    mesFi: number;
+    mesFi?: number;
 }

@@ -5,6 +5,8 @@ import { DespesaFixaDTO } from '../dto/despesa-fixa.dto';
 import { DespesesFixesAssemblerService } from '../assemblers/despeses-fixes-assembler.service';
 import { ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { UserDTO } from 'src/auth/dto/user.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -18,31 +20,39 @@ export class DespesesFixesController {
     @Get()
     @ApiQuery({ name: 'year', required: false })
     @ApiQuery({ name: 'month', required: false })
-    findAll(@Query('year') year: number, @Query('month') month: number): Promise<DespesaFixa[]> {
-        return this.service.findAll(year, month);
+    findAll(@Query('year') year: number, @Query('month') month: number, @CurrentUser() user: UserDTO): Promise<DespesaFixa[]> {
+        return this.service.findAllByUserId(user.userId, { year, month });
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<DespesaFixa> {
-        const despesaFixa: DespesaFixa = await this.service.findOne(id);
+    async findOne(@Param('id') id: string, @CurrentUser() user: UserDTO): Promise<DespesaFixaDTO> {
+        const despesaFixa: DespesaFixa = await this.service.findOneByUserId(id, user.userId);
         if (!despesaFixa) {
             throw new NotFoundException();
         }
-        return despesaFixa;
+        return DespesesFixesAssemblerService.mapEntityToDTO(despesaFixa);
     }
 
     @Post()
-    create(@Body() despesaFixa: DespesaFixaDTO) {
-        return this.service.create(DespesesFixesAssemblerService.mapDTOToEntity(despesaFixa));
+    create(@Body() despesaFixa: DespesaFixaDTO, @CurrentUser() user: UserDTO) {
+        return this.service.create(DespesesFixesAssemblerService.mapDTOToEntity(despesaFixa, user.userId));
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() despesaFixa: Partial<DespesaFixaDTO>) {
-        return this.service.update(+id, DespesesFixesAssemblerService.mapDTOToEntity(despesaFixa));
+    async update(@Param('id') id: string, @Body() despesaFixa: Partial<DespesaFixaDTO>, @CurrentUser() user: UserDTO) {
+        const storedDespesaFixa: DespesaFixa = await this.service.findOneByUserId(id, user.userId);
+        if (!storedDespesaFixa) {
+            throw new NotFoundException();
+        }
+        return this.service.update(+id, DespesesFixesAssemblerService.mapDTOToEntity(despesaFixa, user.userId, storedDespesaFixa));
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: string): Promise<void> {
+    async delete(@Param('id') id: string, @CurrentUser() user: UserDTO): Promise<void> {
+        const storedDespesaFixa: DespesaFixa = await this.service.findOneByUserId(id, user.userId);
+        if (!storedDespesaFixa) {
+            throw new NotFoundException();
+        }
         return this.service.remove(id);
     }
 }

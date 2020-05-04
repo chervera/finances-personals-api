@@ -11,12 +11,12 @@ export class IngressosService {
         private repository: Repository<Ingres>,
     ) { }
 
-    findAll(): Promise<Ingres[]> {
-        return this.repository.find();
+    findAllByUserId(userId: number): Promise<Ingres[]> {
+        return this.repository.find({ user: { id: userId } });
     }
 
-    findOne(id: string): Promise<Ingres> {
-        return this.repository.findOne(id);
+    findOneByUserId(id: string, userId: number): Promise<Ingres> {
+        return this.repository.findOne({ where: { id, user: { id: userId } } });
     }
 
     async create(item: Ingres): Promise<void> {

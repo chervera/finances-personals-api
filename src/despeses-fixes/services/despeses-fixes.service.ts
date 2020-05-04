@@ -11,13 +11,13 @@ export class DespesesFixesService {
         private repository: Repository<DespesaFixa>,
     ) { }
 
-    findAll(year, month): Promise<DespesaFixa[]> {
+    findAllByUserId(userId, filter: { year?: number, month?: number }): Promise<DespesaFixa[]> {
         //TODO: s'ha de filtrar els resultats per mes o any
-        return this.repository.find({ where: { year, month } });
+        return this.repository.find({ where: { year: filter.year, month: filter.month, user: { id: userId } } });
     }
 
-    findOne(id: string): Promise<DespesaFixa> {
-        return this.repository.findOne(id);
+    findOneByUserId(id: string, userId: number): Promise<DespesaFixa> {
+        return this.repository.findOne({ where: { id, user: { id: userId } } });
     }
 
     async create(item: DespesaFixa): Promise<void> {

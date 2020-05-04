@@ -1,25 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { DespesaFixa } from '../domain/despesa-fixa.entity';
 import { DespesaFixaDTO } from '../dto/despesa-fixa.dto';
+import { User } from 'src/users/domain/user.entity';
 
 @Injectable()
 export class DespesesFixesAssemblerService {
 
-    public static mapDTOToEntity(dto: Partial<DespesaFixaDTO>): DespesaFixa {
-        const entity = new DespesaFixa();
+    public static mapDTOToEntity(dto: Partial<DespesaFixaDTO>, userId: number, entity?: DespesaFixa): DespesaFixa {
+        if (!entity) {
+            entity = new DespesaFixa();
+            entity.user = new User();
+            entity.user.id = userId;
+        }
         return { ...entity, ...dto };
 
     }
 
     public static mapEntityToDTO(entity: DespesaFixa): DespesaFixaDTO {
-        const dto = new DespesaFixaDTO();
-        dto.descripcio = entity.descripcio;
-        dto.import = entity.import;
-        dto.mesInici = entity.mesInici;
-        dto.mesFi = entity.mesFi;
-        dto.id = dto.id;
-        // Una manera JS 2018 de fer el mateix.
-        //const {dataInsercio, ...dto} = entity;
+        const { dataInsercio, ...dto } = entity;
         return dto;
     }
 }
