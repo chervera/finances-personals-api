@@ -14,12 +14,12 @@ export class MastersService {
         private repositoryAlimentacio: Repository<TipusAlimentacio>,
     ) { }
 
-    findAllTipusConsum(): Promise<TipusConsum[]> {
-        return this.repositoryConsum.find();
+    findAllTipusConsumByUserId(userId: number): Promise<TipusConsum[]> {
+        return this.repositoryConsum.find({ user: { id: userId } });
     }
 
-    findAllTipusAlimentacio(): Promise<TipusAlimentacio[]> {
-        return this.repositoryAlimentacio.find();
+    findAllTipusAlimentacioByUserId(userId: number): Promise<TipusAlimentacio[]> {
+        return this.repositoryAlimentacio.find({ user: { id: userId } });
     }
 
 
