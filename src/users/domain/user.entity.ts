@@ -12,6 +12,12 @@ export class User {
     password: string;
 
     @Column()
+    name: string;
+
+    @Column()
+    surname: string;
+
+    @Column()
     dataInsercio: Date;
 
     constructor() {

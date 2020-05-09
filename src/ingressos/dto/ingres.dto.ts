@@ -10,7 +10,6 @@ export class IngresDTO {
     import: number;
 
     @ApiProperty()
-    @IsNotEmpty()
     concepte: string;
 
     @ApiProperty()
