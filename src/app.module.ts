@@ -9,6 +9,7 @@ import { MastersModule } from './masters/masters.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CoreModule } from './core/core.module';
 
 
 
@@ -35,7 +36,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConsumsModule,
     MastersModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    CoreModule
   ],
   providers: [AppService],
 })

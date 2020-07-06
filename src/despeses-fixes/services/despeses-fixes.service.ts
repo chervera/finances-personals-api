@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DespesaFixa } from '../domain/despesa-fixa.entity';
 import { Repository } from 'typeorm';
+import { FilterService } from 'src/core/filter/filter.service';
 
 @Injectable()
 export class DespesesFixesService {
@@ -9,11 +10,11 @@ export class DespesesFixesService {
     constructor(
         @InjectRepository(DespesaFixa)
         private repository: Repository<DespesaFixa>,
+        private filterService: FilterService
     ) { }
 
     findAllByUserId(userId, filter: { year?: number, month?: number }): Promise<DespesaFixa[]> {
-        //TODO: s'ha de filtrar els resultats per mes o any
-        return this.repository.find({ where: { year: filter.year, month: filter.month, user: { id: userId } } });
+        return this.repository.find({ where: { ...this.filterService.generateWhereFromFilter(filter), user: { id: userId } } });
     }
 
     findOneByUserId(id: string, userId: number): Promise<DespesaFixa> {

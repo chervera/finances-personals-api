@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, UseGuards, Query } from '@nestjs/common';
 import { Consum } from '../domain/consum.entity';
 import { ConsumAssemblerService } from '../assemblers/consum-assembler.service';
 import { ConsumsService } from '../services/consums.service';
 import { ConsumDTO } from '../dto/consum.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserDTO } from 'src/auth/dto/user.dto';
@@ -18,8 +18,10 @@ export class ConsumController {
     ) { }
 
     @Get()
-    findAll(@CurrentUser() user: UserDTO): Promise<Consum[]> {
-        return this.service.findAllByUserId(user.userId);
+    @ApiQuery({ name: 'year', required: false })
+    @ApiQuery({ name: 'month', required: false })
+    findAll(@Query('year') year: number, @Query('month') month: number, @CurrentUser() user: UserDTO): Promise<Consum[]> {
+        return this.service.findAllByUserId(user.userId, { year, month });
     }
 
     @Get(':id')

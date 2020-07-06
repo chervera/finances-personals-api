@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, NotFoundException, Delete, Put, UseGuards, Query } from '@nestjs/common';
 import { Alimentacio } from '../domain/alimentacio.entity';
 import { AlimentacioAssemblerService } from '../assemblers/alimentacio-assembler.service';
 import { AlimentacionsService } from '../services/alimentacions.service';
 import { AlimentacioDTO } from '../dto/alimentacio.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserDTO } from 'src/auth/dto/user.dto';
@@ -20,8 +20,10 @@ export class AlimentacioController {
     ) { }
 
     @Get()
-    findAll(@CurrentUser() user: UserDTO): Promise<AlimentacioDTO[]> {
-        return this.service.findAllByUserId(user.userId).then((alimentacions: Alimentacio[]) => alimentacions.map((alimentacio => AlimentacioAssemblerService.mapEntityToDTO(alimentacio))));
+    @ApiQuery({ name: 'year', required: false })
+    @ApiQuery({ name: 'month', required: false })
+    findAll(@Query('year') year: number, @Query('month') month: number, @CurrentUser() user: UserDTO): Promise<AlimentacioDTO[]> {
+        return this.service.findAllByUserId(user.userId, { year, month }).then((alimentacions: Alimentacio[]) => alimentacions.map((alimentacio => AlimentacioAssemblerService.mapEntityToDTO(alimentacio))));
     }
 
     @Get(':id')
