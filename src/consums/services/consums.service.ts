@@ -14,7 +14,6 @@ export class ConsumsService {
     ) { }
 
     findAllByUserId(userId: number, filter: { year?: number, month?: number }): Promise<Consum[]> {
-        console.log({ user: { id: userId }, ...this.filterService.generateWhereFromFilter(filter) });
         return this.repository.find({ user: { id: userId }, ...this.filterService.generateWhereFromFilter(filter) });
     }
 
